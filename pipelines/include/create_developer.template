@@ -1,4 +1,24 @@
 CREATE DATABASE DEVAPP;
+CREATE TABLE DEVAPP.departments (
+    DEPT decimal(4,0) zerofill,
+    DEPT_NAME varchar(250)
+    
+);
+DELIMITER //
+CREATE PROCEDURE DEVAPP.filldb()
+BEGIN
+    DECLARE i INT;
+    SET i = 1;
+    START TRANSACTION;
+    WHILE i <= 10 DO
+        INSERT INTO DEVAPP.departments (DEPT, DEPT_NAME) VALUES (i, CONCAT("Department",i));
+        SET i = i + 1;
+    END WHILE;
+    COMMIT;
+END;
+//
+DELIMITER ;
+CALL DEVAPP.filldb();
 CREATE USER 'developer'@'localhost' IDENTIFIED BY '<PASSWORD>';
 GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'developer'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
