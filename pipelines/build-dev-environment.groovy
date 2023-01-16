@@ -46,6 +46,19 @@ pipeline {
               }
             }
         }
+        stage('Validate MySQL port number') {
+          steps {
+            script {
+              echo "ATTENTION: mySQL port should be in the valid range of 20000 and 30000"
+              def range = 20000..50000
+              if (params.MYSQL_PORT.toInteger() in range ) {
+                  echo "Valid port for the container. Build proceeds"
+              }else {
+                  error "MySQL Port defined outside permitted range.Exiting... "
+              }
+            }
+          }
+        }        
         stage('Start new container using latest image and create user') {
             steps {     
               script {
