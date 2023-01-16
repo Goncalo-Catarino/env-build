@@ -19,9 +19,11 @@ pipeline {
         stage('Checkout GIT repository') {
             steps {     
               script {
-                git branch: 'master',
-                credentialsId: '21f01d09-06da9cc35103',
-                url: 'git@mysecret-nonexistent-repo/jenkins.git'
+                if (!params.SKIP_GIT){
+                  git branch: 'master',
+                  credentialsId: '21f01d09-06da9cc35103',
+                  url: 'git@mysecret-nonexistent-repo/jenkins.git'
+                } else { echo "Skipping GIT"}
               }
             }
         }
@@ -53,10 +55,10 @@ pipeline {
                 sh """
                 docker run -itd --name ${containerName} --rm -e MYSQL_ROOT_PASSWORD=$params.MYSQL_PASSWORD -p $params.MYSQL_PORT:3306 $params.ENVIRONMENT_NAME:latest
                 """
-
+                /*
                 sh """
                 docker exec ${containerName} /bin/bash -c 'mysql --user="root" --password="$params.MYSQL_PASSWORD" < /scripts/create_developer.sql'
-                """
+                """*/
 
                 echo "Docker container created: $containerName"
 
